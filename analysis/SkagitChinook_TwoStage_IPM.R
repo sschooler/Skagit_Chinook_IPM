@@ -333,8 +333,7 @@ par_Rcov_jags <- c("pas","mu_pas","psa","E_R_psa","mu_R_psa", "beta",
 
 ## define initial values
 init_vals_AR <- function() {
-  list(mu_pas = log(250), mu_psa=log(.01),
-       beta = 1.5e-7, 
+  list(mu_pas = log(250), mu_psa=log(.01), beta = 1.5e-7, 
        pi_tau = 10, pi_eta = rep(1,A),
        pi_vec = matrix(c(0.020,0.219,0.581,0.179), n_yrs-age_min, A, 
                        byrow = TRUE),
@@ -350,24 +349,18 @@ init_vals_AR <- function() {
 # fit model through jagsUI using parallel processing
 # fit using 4 chains, a burn-in (n.adapt) of 50000,
 # n thin of 300, and 400000 iterations
-test <- Sys.time()
+# with 4 cores; 2.30 GHz processor takes ~ 7 minutes
 mod_fit <- jags(data = dat_Rcov_jags, inits = init_vals_AR,
                 model.file = file.path(jagsdir, "Skagit_Chinook_TwoStage_IPM.txt"),
                 parameters.to.save = par_Rcov_jags, n.chains = 4,
                 parallel = T, n.cores = 4, n.adapt = 50000,
                 n.thin = 400, n.iter = 400000)
-Sys.time()-test
-
 # examine model results and check convergence
 print(mod_fit)
 model_results <- mod_fit$summary
 # examine results
 head(formatC(mod_fit$summary, format = "e", digits = 2), n = 20)
 jags.View(mod_fit)
-
-# save model for creating plots later
-save(mod_fit, file = paste0(savedir, "/", "mod_fit_", 
-                            format(Sys.Date(), "%m%d%y")))
 
 ##########################
 #### model diagnostics ###
@@ -376,8 +369,7 @@ save(mod_fit, file = paste0(savedir, "/", "mod_fit_",
 # examine traceplots and density plots for convergence
 ## params of interest
 par_conv <- c("pas","mu_pas","psa","E_R_psa","mu_R_psa",
-              "beta", "sigma_r","sigma_sp","sigma_sm", "sigma_pas", 
-              "gamma_sa", "gamma_as")
+              "beta", "sigma_r","sigma_sp","sigma_sm", "sigma_pas")
 traceplot(mod_fit, parameters = par_conv)
 densityplot(mod_fit, parameters = par_conv)
 
@@ -390,5 +382,4 @@ t(round(autocorr.diag(
   mod_fit$samples[,c("pas","mu_pas","psa","E_R_psa","mu_R_psa",
                      "beta", "sigma_r","sigma_sp","sigma_sm", "sigma_pas")],
   lags = seq(mod_fit$mcmc.info$n.thin,  4*mod_fit$mcmc.info$n.thin, 
-             mod_fit$mcmc.info$n.thin),  relative=FALSE), 2))
-
+             mod_fit$mcmc.info$n.thin),  relative = FALSE), 2))

@@ -23,14 +23,6 @@ if(!require("nlraa")) {
   install.packages("nlraa")
   library("nlraa")
 }
-# if(!require("FSA")) {
-#   install.packages("FSA")
-#   library("FSA")
-# }
-# if(!require("FSAmisc")) {
-#   install.packages("FSAmisc")
-#   library("FSAmisc")
-# }
 if(!require("stringr")) {
   install.packages("stringr")
   library("stringr")
