@@ -65,14 +65,14 @@ scl_cvrs_as <- scl_cvrs[,grep("as", colnames(scl_cvrs))]
 # initialize data frames
 # Note: identification as "stock" or "recruit" varies by life stage 
 # (marine [smolt to adult, sa], or freshwater [adult to smolt, as])
-psa.df <- data.frame("stock" = smolts[smolts$year<2015,"smolt"], 
+psa.df <- data.frame("smolts" = smolts[smolts$year<2015,"smolt"], 
                      "recruits" = recruits[recruits$year>1992,"recruitment"],
                      "logR" = log(recruits[recruits$year>1992,"recruitment"]),
                      scl_cvrs[,colnames(scl_cvrs_sa)])
-pas.df <- data.frame("recruits" = smolts[smolts$year<2015,"smolt"], 
-                     "stock" = spawners[spawners$year>1992&spawners$year<2015,
+pas.df <- data.frame("smolts" = smolts[smolts$year<2015,"smolt"], 
+                     "escapement" = spawners[spawners$year>1992&spawners$year<2015,
                                         "escapement"],
-                     "logR" = log(smolts[smolts$year<2015,"smolt"]),
+                     "logS" = log(smolts[smolts$year<2015,"smolt"]),
                      scl_cvrs[,colnames(scl_cvrs_as)])
 colnames(psa.df) <- str_remove(names(psa.df), "sa_")
 colnames(pas.df) <- str_remove(names(pas.df), "as_")
@@ -88,17 +88,17 @@ colnames(pas.df) <- str_remove(names(pas.df), "as_")
 # order as in the Bayesian covariates file
 
 psa_nls <- nls(
-  logR ~ log(a) + log(stock) + gNPGO*NPGO + gCUTI*CUTI + gMEI*MEI +  
-    gSST*SST - b*stock, 
+  logR ~ log(a) + log(smolts) + gNPGO*NPGO + gCUTI*CUTI + gMEI*MEI +  
+    gSST*SST - b*smolts, 
   data = psa.df, 
-  start = list(a = 0.01, b = 1.5e-7, gNPGO = 0, gCUTI = 0, gMEI = 0, gSST = 0))
+  start = list(a = 0.01, b = 1.8e-7, gNPGO = 0, gCUTI = 0, gMEI = 0, gSST = 0))
 
 # freshwater productivity (adult to smolt)
 # parameterized as a non-density dependent model
-pas_nls <- nls(logR ~ log(a) + log(stock) + gfloodRI*floodRI + gFlowPRI*propRI1 +
+pas_nls <- nls(logS ~ log(a) + log(escapement) + gfloodRI*floodRI + gFlowPRI*propRI1 +
                      gFlowSp*flowFebJun + gAirSp*airTJanApr, 
                    data = pas.df,
-                   start = list(a = 150, gfloodRI = 0, gFlowPRI = 0, 
+                   start = list(a = 275, gfloodRI = 0, gFlowPRI = 0, 
                                 gFlowSp= 0, gAirSp = 0))
 
 # check results

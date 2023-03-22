@@ -22,7 +22,6 @@ model {
   for(i in 1:n_cov_sa) { 
     gamma_sa[i] ~ dnorm(0,0.01) 
   }
-  
   for(i in 1:n_cov_as){
     gamma_as[i] ~ dnorm(0, 0.01)
   }
@@ -128,6 +127,7 @@ model {
   fit.new_lnRec <- sum(res_ln_Rec_new[])
   
   ## get predicted calendar year returns by age
+  ## matrix Run has dim [(n_yrs-age_min) x A]
   ## step 1: incomplete early broods
   ## first cal yr of this grp is first brood yr + age_min
   for(i in 1:(age_max-age_min)) {
@@ -148,7 +148,6 @@ model {
     }
     ## multinomial for age comp
     dat_age[i,1:A] ~ dmulti(age_v[i,1:A],dat_age[i,A+1]);
-    lp_age[i] <- logdensity.multi(dat_age[i,1:A],age_v[i,1:A],dat_age[i,A+1]);
   }
   
   ## step 2: info from complete broods
@@ -165,7 +164,6 @@ model {
     }
     ## multinomial for age comp
     dat_age[i,1:A] ~ dmulti(age_v[i,1:A],dat_age[i,A+1]);
-    lp_age[i] <- logdensity.multi(dat_age[i,1:A],age_v[i,1:A],dat_age[i,A+1]);
   }
   
   ## freshwater productivity
