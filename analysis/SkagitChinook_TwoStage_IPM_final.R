@@ -43,6 +43,8 @@ yr_last <- 2016
 ## min & max adult age classes
 age_min <- 2
 age_max <- 5
+# range of ages
+A <- age_max - age_min + 1
 
 ## escapement data
 dat_esc <- read.csv(file.path(datadir,  "skagit_chinook_esc.csv"))
@@ -335,26 +337,31 @@ par_Rcov_jags <- c("pas","mu_pas","psa","E_R_psa","mu_R_psa", "beta",
 init_vals_AR <- function() {
   list(mu_pas = log(250), mu_psa=log(.01), beta = 1.5e-7, 
        pi_tau = 10, pi_eta = rep(1,A),
-       pi_vec = matrix(c(0.020,0.219,0.581,0.179), n_yrs-age_min, A, 
+       pi_vec = matrix(c(0.02,0.20,0.50,0.18), n_yrs-age_min, A, 
                        byrow = TRUE),
-       Rec_mu = log(1000), Rec_sig = 0.1, #Rec_tau = .1^-2, 
+       Rec_mu = log(1000), Rec_sig = 0.1, 
        tot_ln_Rec = rep(log(1000), n_yrs - age_min),
        innov_1 = 0, phi = 0.5)
 }
+
+# 4 chains, a burn-in (n.adapt) of 50000,
+# thin rate of 400, and 400000 iterations
+nc <- 4
+ni <- 400000
+na <- 50000
+nt <- 400
 
 ##########################
 ####### fit model ########
 ##########################
 
 # fit model through jagsUI using parallel processing
-# fit using 4 chains, a burn-in (n.adapt) of 50000,
-# n thin of 300, and 400000 iterations
 # with 4 cores; 2.30 GHz processor takes ~ 7 minutes
 mod_fit <- jags(data = dat_Rcov_jags, inits = init_vals_AR,
                 model.file = file.path(jagsdir, "Skagit_Chinook_TwoStage_IPM.txt"),
-                parameters.to.save = par_Rcov_jags, n.chains = 4,
-                parallel = T, n.cores = 4, n.adapt = 50000,
-                n.thin = 400, n.iter = 400000)
+                parameters.to.save = par_Rcov_jags, parallel = T, 
+                n.chains = nc, n.adapt = na,
+                n.thin = nt, n.iter = ni)
 # examine model results and check convergence
 print(mod_fit)
 model_results <- mod_fit$summary

@@ -41,27 +41,23 @@ jagsdir <- here("jags")
 analdir <- here("analysis")
 savedir <- here("analysis/cache")
 
-## first & last years of fish data
-yr_frst <- 1992; yr_last <- 2016
-## min & max adult age classes
-age_min <- 2; age_max <- 5
-## num of age classes
-A <- age_max - age_min + 1
 
 ##########################
 #### initialize data #####
 ##########################
 ## first & last years of fish data
-# change these for simulations 16-19 for more data
-yr_frst <- 1993
-yr_last <- 2016
+# change these for simulations 15-19 for numbers of years
+yr_frst <- 1992
+yr_last <- 2021
 
 ## min & max adult age classes
 age_min <- 2
 age_max <- 5
+# range of ages
+A <- age_max - age_min + 1
 
 ## load data frame
-sim.num <- 6 # change to apply each simulation
+sim.num <- 19 # change to apply each simulation (note: 15-20 use same file, change yrs)
 dat <- read.csv(file.path(datadir, paste0("simulations/Sim", sim.num, "_Data.csv")))
 dat <- dat[which(dat$year %in% yr_frst:yr_last),]
 dat_yrs <- dat$year; n_yrs <- length(dat_yrs)
@@ -264,11 +260,9 @@ dat_jags <- list(dat_age = dat_age, ln_dat_esc = ln_dat_esc,
 
 ## define initial values 
 init_vals <- function() {
-  list(#mu_pas = log(250), mu_psa=log(.01), beta = 1.5e-7,
-    pi_tau = 10, pi_eta = rep(1,A),
-    pi_vec = matrix(c(0.020,0.219,0.581,0.179), n_yrs-age_min, A, 
-                    byrow = TRUE),
-    tot_ln_Rec = rep(log(10000), n_yrs - age_min))
+  list(pi_tau = 10, pi_eta = rep(1,A),
+       pi_vec = matrix(c(0.02,0.20,0.50,0.18), n_yrs-age_min, A, byrow = TRUE),
+       tot_ln_Rec = rep(log(1000), n_yrs - age_min))
 }
 
 ## model parameters/states for JAGS to return:
@@ -279,18 +273,28 @@ par_jags <- c("pas","mu_pas","psa","mu_R_psa", "beta",
               "fit_lnRec", "fit.new_lnRec",
               "fit_lnSmolt", "fit.new_lnSmolt")
 
+# 4 chains, 50000 adaptations (similar to burn-in),
+# thin rate of 400, and 400000 iterations
+# note: for simulations with > 25 years, number of iterations
+# and adaptations must be increased for convergence
+# may need to add burn-in
+nc <- 4
+ni <- 400000
+na <- 50000
+nt <- 400
+nb <- 0
+
 ##########################
 ####### fit model ########
 ##########################
 # fit model through jagsUI using parallel processing
-# fit using 4 chains, a burn-in (n.adapt) of 50000,
-# n thin of 300, and 400000 iterations
+# where n.cores = n.chains
 mod_fit <- jags(data = dat_jags, inits = init_vals,
                 model.file = file.path(jagsdir, "Skagit_Chinook_TwoStage_IPM_sims.txt"),
-                parameters.to.save = par_jags, n.chains = 4,
-                parallel = T, n.cores = 4, n.adapt = 50000,
-                n.thin = 400, n.iter = 400000)
-
+                parameters.to.save = par_jags, parallel = T, 
+                n.chains = nc, n.adapt = na, n.thin = nt, n.iter = ni,
+                n.burnin = nb)
+beep()
 # examine results
 summary(mod_fit)
 head(formatC(mod_fit$summary, format = "e", digits = 2), n = 10)
