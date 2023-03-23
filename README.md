@@ -1,6 +1,6 @@
 ## Integrated population models and habitat evaluation for Chinook Salmon recovery in the Skagit River System
-**Authors: Sarah L. Schooler, Michael LeMoine** <br/>
-**Collaborators: Casey Ruff, Eric Beamer, Catherine Austin** <br/>
+**Authors: Eric Beamer, Sarah L. Schooler, Michael LeMoine** <br/>
+**Collaborators: Casey Ruff, Catherine Austin** <br/>
 **Organization: [Skagit River System Cooperative](http://skagitcoop.org/)** <br/>
 Grant program: [EPA National Estuary Program](https://www.epa.gov/puget-sound/funding-and-grants-puget-sound)/[Puget Sound Partnership Habitat Strategic Initiative](https://pugetsoundestuary.wa.gov/habitat-strategic-initiative/) <br/>
 Grant number: Near-Term Action (NTA) 2018-0697 <br/>
