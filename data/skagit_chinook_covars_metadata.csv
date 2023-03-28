@@ -1,0 +1,18 @@
+"Schooler, S.L. and Lemoine, M. 2023. Table 1 from Integrated Population Models with application to Skagit River Chinook Recovery Evaluation. Near-Term Action (NTA) 2018-0697. Skagit River System Cooperative.",,,,
+,,,,
+Data,Covariate,Variable name,T,Life stage
+Air temperature in Sedro Woolley (#457507),Annual mean temperature,as_airTann,f,Freshwater rearing
+Air temperature in Sedro Woolley (#457507),Jan to Apr mean temperature,as_AirTJanApr,f,Freshwater rearing
+Skagit River discharge (m3/s) at Mount Vernon USGS station (#12200500),Proportion of days above 1-year recurrence interval Aug to Feb,as_propRI1,f,Redd
+Skagit River discharge (m3/s) at Mount Vernon USGS station (#12200500),Recurrence interval for maximum annual stream flow,as_floodRI,f,Redd
+Skagit River discharge (m3/s) at Mount Vernon USGS station (#12200500),Maximum flow during Aug to Feb,as_flowPeakW,f,Redd
+Skagit River discharge (m3/s) at Mount Vernon USGS station (#12200500),Annual mean flow Feb to Jun,as_flowFebApr,f,Freshwater rearing
+Delta temperature,Mean Skagit River Delta temp. Feb to Aug,sa_deltaT,m,Estuary rearing
+Ocean temperature,Annual mean coastal Washington sea surface temperature,sa_WASST,m,Estuary rearing/marine
+Ocean temperature,Annual mean northeast Pacific sea surface temperature,sa_SST,m,Marine
+Pacific Decadal Oscillation Index (PDO),Annual mean,sa_PDO,m,Marine
+North Pacific Gyre Oscillation (NPGO),Annual mean,sa_NPGO,m,Marine
+Biologically Effective Upwelling Transport Index (BEUTI),Annual mean,sa_BEUTI,m,Marine
+Coastal Upwelling Transport Index (CUTI),Annual mean,sa_CUTI,m,Marine
+Oceanic El Ni?o Index (ONI),Annual mean,sa_ONI,m,Marine
+Multivariate El Ni?o/Southern Oscillation Index (MEI),Annual mean,sa_MEI,m,Marine
