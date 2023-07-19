@@ -40,6 +40,14 @@ if(!require("stringr")) {
   install.packages("stringr")
   library("stringr")
 }
+if(!require("rjags")) {
+  install.packages("rjags")
+  library("rjags")
+}
+if(!require("jagsUI")) {
+  install.packages("jagsUI")
+  library("jagsUI")
+}
 
 ## set directory locations
 datadir <- here("data")
